@@ -73,3 +73,13 @@ Never rewrite — only append. Consistent prefixes so this stays parseable:
 - created sources: [[2026-06-28-claude-plugins-marketplace-map]]
 - headline: official Anthropic marketplace `anthropics/claude-plugins-official` (synced 2026-06-26); 240-entry catalog = 37 first-party (`/plugins`) + third-party (`/external_plugins`, 15 local); top categories development 103 / productivity 45 / database 33; a plugin bundles commands+subagents+skills+hooks+MCP behind `.claude-plugin/plugin.json`, skills namespaced `<plugin>:<skill>`; only 2 plugins enabled locally (incl. `claude-code-setup`). Includes a Mermaid map on [[claude-plugins-official]].
 - index: regenerated on the main branch post-merge (not in the worktree, per schema).
+
+## [2026-06-28] ingest | Session: AI coding-agents survey (alternatives to Claude Code)
+- Source: general-knowledge synthesis in a Claude Code session (no `raw/` file; assistant cutoff Jan 2026, per-tool details flagged as needing re-check). Claude-Code-specific backend facts verified against official Claude Code docs via a `claude-code-guide` subagent. Extends the **Claude Code tooling** domain with a cross-vendor agent landscape.
+- created sources: [[2026-06-28-ai-coding-agents-survey]]
+- created concepts: [[ai-coding-agents]] (Type-classified landscape + comparison table), [[local-model-coding-agent]] (free+offline how-to, tied to [[internet-lockdown-vsi]])
+- created entities: [[aider]], [[goose-agent]], [[opencode]], [[openai-codex-cli]], [[cline]], [[continue-dev]] (the realistic free + open-source + local-model candidates)
+- updated: [[claude-code]] — added a "Backends" section (Bedrock/Vertex/Foundry/AWS flags; custom `ANTHROPIC_BASE_URL`+auth; local model via Anthropic-format proxy; free-to-install but proprietary, not fully-offline) + cross-links into the new landscape.
+- headline: classified agents by **Type** (CLI / IDE / Cloud / Framework) per the user's request. Free+offline+local = open-source tool + local model backend; clean fits are the natively-local open-source agents (Aider/Goose/OpenCode/Codex-CLI, Cline/Continue), no proxy. Claude Code can do it too but only via an Anthropic-format proxy and stays proprietary — the harder path. Cursor/Windsurf/Copilot stay cloud-tethered; Devin/Jules/Factory are paid cloud.
+- curation: non-qualifying agents (Cursor, Windsurf, Copilot, Amazon Q CLI, Gemini CLI, Roo Code, Devin, Jules, Factory, frameworks) kept as rows/notes in [[ai-coding-agents]] rather than separate pages — can be promoted later.
+- index: NOT regenerated in the worktree; rebuild on main post-merge via `python3 scripts/build_index.py` (per schema). Expect 38 → 47 pages.
