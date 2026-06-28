@@ -1,0 +1,17 @@
+---
+# Block public-internet access for a single user (default: vsi) on this host, enforced by
+# nftables + a systemd unit. Needs root (this machine has no passwordless sudo).
+#
+#   Apply, prompt for sudo:    ansible-playbook playbooks/internet-lockdown.yml -K
+#   Apply, sudo pw from .env:  set -a; source .env; set +a
+#                              ansible-playbook playbooks/internet-lockdown.yml
+#   Remove the lockdown:       ansible-playbook playbooks/internet-lockdown.yml -K \
+#                                -e internet_lockdown_state=absent
+#   Lock down another user:    ansible-playbook playbooks/internet-lockdown.yml -K \
+#                                -e internet_lockdown_user=someone
+- name: Internet lockdown
+  hosts: local
+  gather_facts: false
+  become: true
+  roles:
+    - role: internet_lockdown

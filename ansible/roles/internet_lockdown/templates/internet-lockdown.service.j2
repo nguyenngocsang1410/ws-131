@@ -1,0 +1,17 @@
+[Unit]
+# {{ ansible_managed }}
+Description=Internet lockdown for user {{ internet_lockdown_user }} (uid {{ internet_lockdown_uid }})
+Documentation=file://{{ internet_lockdown_nft_file }}
+After=network-pre.target nftables.service
+Wants=network-pre.target
+Before=network.target
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/usr/sbin/nft -f {{ internet_lockdown_nft_file }}
+ExecReload=/usr/sbin/nft -f {{ internet_lockdown_nft_file }}
+ExecStop=/usr/sbin/nft delete table inet {{ internet_lockdown_table }}
+
+[Install]
+WantedBy=multi-user.target

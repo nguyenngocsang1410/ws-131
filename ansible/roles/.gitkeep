@@ -1,0 +1,2 @@
+# Place roles here, e.g. roles/base/{tasks,handlers,defaults,templates,files}/.
+# Scaffold a new role with:  ansible-galaxy role init roles/<name>

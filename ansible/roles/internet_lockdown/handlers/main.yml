@@ -1,0 +1,9 @@
+---
+- name: Reload systemd
+  ansible.builtin.systemd_service:
+    daemon_reload: true
+
+- name: Reload internet lockdown
+  ansible.builtin.systemd_service:
+    name: "{{ internet_lockdown_service }}.service"
+    state: reloaded

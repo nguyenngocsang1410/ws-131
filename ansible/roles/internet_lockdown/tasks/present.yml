@@ -1,0 +1,46 @@
+---
+# Install and activate the lockdown.
+- name: Ensure nftables is installed
+  ansible.builtin.apt:
+    name: nftables
+    state: present
+    update_cache: false
+
+- name: Ensure the nftables ruleset directory exists
+  ansible.builtin.file:
+    path: "{{ internet_lockdown_nft_file | dirname }}"
+    state: directory
+    owner: root
+    group: root
+    mode: "0755"
+
+- name: Install the per-user lockdown ruleset
+  ansible.builtin.template:
+    src: internet-lockdown.nft.j2
+    dest: "{{ internet_lockdown_nft_file }}"
+    owner: root
+    group: root
+    mode: "0644"
+    validate: /usr/sbin/nft -c -f %s
+  notify: Reload internet lockdown
+
+- name: Install the lockdown systemd unit
+  ansible.builtin.template:
+    src: internet-lockdown.service.j2
+    dest: "/etc/systemd/system/{{ internet_lockdown_service }}.service"
+    owner: root
+    group: root
+    mode: "0644"
+  notify:
+    - Reload systemd
+    - Reload internet lockdown
+
+- name: Enable the lockdown at boot and start it now
+  ansible.builtin.systemd_service:
+    name: "{{ internet_lockdown_service }}.service"
+    enabled: true
+    state: started
+    daemon_reload: true
+
+- name: Activate any pending rule changes before the play ends
+  ansible.builtin.meta: flush_handlers

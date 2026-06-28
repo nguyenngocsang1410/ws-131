@@ -1,0 +1,13 @@
+---
+# Host-specific variables for vsi-Precision-3680.
+#
+# Snapshot of facts at workspace init (2026-06-28), informational only —
+# the live truth comes from `gather_facts`/`ansible -m setup`:
+#   distribution : Ubuntu 24.04.4 LTS (Noble Numbat)
+#   kernel       : 6.17.0-29-generic
+#   arch         : x86_64
+#   vcpus        : 32
+#   memory       : ~62 GiB
+#   primary_user : vietnq37 (uid 1001, member of group 'sudo')
+#
+# Add host-specific overrides below.

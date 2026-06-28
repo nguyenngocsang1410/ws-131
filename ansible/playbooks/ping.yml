@@ -1,0 +1,9 @@
+---
+# Connectivity smoke test. Run:
+#   ansible-playbook playbooks/ping.yml
+- name: Connectivity smoke test
+  hosts: local
+  gather_facts: false
+  tasks:
+    - name: Ping this machine
+      ansible.builtin.ping:

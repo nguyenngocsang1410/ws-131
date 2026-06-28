@@ -1,0 +1,23 @@
+---
+# Entry point: validate inputs, resolve the user's UID, converge to the desired state.
+- name: Validate requested parameters
+  ansible.builtin.assert:
+    that:
+      - internet_lockdown_state in ['present', 'absent']
+      - internet_lockdown_action in ['drop', 'reject']
+    fail_msg: >-
+      internet_lockdown_state must be 'present' or 'absent' and internet_lockdown_action
+      must be 'drop' or 'reject'.
+    quiet: true
+
+- name: Resolve the target user's UID
+  ansible.builtin.getent:
+    database: passwd
+    key: "{{ internet_lockdown_user }}"
+
+- name: Record the resolved UID
+  ansible.builtin.set_fact:
+    internet_lockdown_uid: "{{ ansible_facts['getent_passwd'][internet_lockdown_user][1] }}"
+
+- name: "Converge internet lockdown for {{ internet_lockdown_user }} -> {{ internet_lockdown_state }}"
+  ansible.builtin.include_tasks: "{{ internet_lockdown_state }}.yml"

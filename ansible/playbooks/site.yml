@@ -1,0 +1,24 @@
+---
+# Main entry point. Run:
+#   ansible-playbook playbooks/site.yml
+#
+# For tasks that need root, set `become: true` on the task/play and run with -K:
+#   ansible-playbook playbooks/site.yml -K
+- name: Configure this machine
+  hosts: local
+  gather_facts: true
+  become: false
+  tasks:
+    - name: Show a summary of this machine
+      ansible.builtin.debug:
+        msg: >-
+          {{ ansible_facts['distribution'] }} {{ ansible_facts['distribution_version'] }}
+          ({{ ansible_facts['kernel'] }}) on {{ ansible_facts['architecture'] }} —
+          {{ ansible_facts['processor_vcpus'] }} vCPUs,
+          {{ (ansible_facts['memtotal_mb'] / 1024) | round(1) }} GiB RAM,
+          host {{ ansible_facts['hostname'] }}.
+
+    # Add roles and tasks below. Example of using a role:
+    # - name: Apply base configuration
+    #   ansible.builtin.import_role:
+    #     name: base

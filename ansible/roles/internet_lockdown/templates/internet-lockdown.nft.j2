@@ -1,0 +1,32 @@
+#!/usr/sbin/nft -f
+# {{ ansible_managed }}
+# Internet lockdown for user {{ internet_lockdown_user }} (uid {{ internet_lockdown_uid }}).
+#
+# This is a dedicated table: it holds only this rule set and never touches other
+# tables (ufw, docker, libvirt, ...). The leading add+flush makes `nft -f` re-apply
+# cleanly and atomically, so the file is safe to reload at any time.
+
+add table inet {{ internet_lockdown_table }}
+flush table inet {{ internet_lockdown_table }}
+
+table inet {{ internet_lockdown_table }} {
+    chain output {
+        type filter hook output priority 0; policy accept;
+
+        # Leave every other user's traffic completely untouched.
+        meta skuid != {{ internet_lockdown_uid }} accept
+
+        # Always allow this user's loopback traffic.
+        oifname "lo" accept
+{% if internet_lockdown_allow_private %}
+
+        # Local / LAN / multicast destinations are not "the internet" — keep them working.
+        ip  daddr { {{ internet_lockdown_local_v4 | join(', ') }} } accept
+        ip6 daddr { {{ internet_lockdown_local_v6 | join(', ') }} } accept
+{% endif %}
+
+        # Anything still reaching here is public-internet bound for this user — block it.
+        meta skuid {{ internet_lockdown_uid }} {{ internet_lockdown_action }}{% if internet_lockdown_action == 'reject' %} with icmpx type admin-prohibited{% endif %}
+
+    }
+}

@@ -1,0 +1,37 @@
+---
+# Tear the lockdown down again. Safe to run even if it was never installed.
+- name: Stop and disable the lockdown service (ExecStop flushes the nft table)
+  ansible.builtin.systemd_service:
+    name: "{{ internet_lockdown_service }}.service"
+    enabled: false
+    state: stopped
+  register: _ld_stop
+  failed_when:
+    - _ld_stop is failed
+    - "'Could not find' not in (_ld_stop.msg | default(''))"
+    - "'not loaded' not in (_ld_stop.msg | default(''))"
+
+- name: Remove the systemd unit
+  ansible.builtin.file:
+    path: "/etc/systemd/system/{{ internet_lockdown_service }}.service"
+    state: absent
+  notify: Reload systemd
+
+- name: Remove the nftables ruleset file
+  ansible.builtin.file:
+    path: "{{ internet_lockdown_nft_file }}"
+    state: absent
+
+- name: Make sure the nft table is really gone
+  ansible.builtin.command:
+    cmd: "/usr/sbin/nft delete table inet {{ internet_lockdown_table }}"
+  register: _ld_del
+  changed_when: _ld_del.rc == 0
+  failed_when:
+    - _ld_del.rc != 0
+    - "'No such file' not in _ld_del.stderr"
+    - "'does not exist' not in _ld_del.stderr"
+
+- name: Reload systemd after removing the unit
+  ansible.builtin.systemd_service:
+    daemon_reload: true

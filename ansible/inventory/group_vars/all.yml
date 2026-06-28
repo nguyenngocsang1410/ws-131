@@ -1,0 +1,14 @@
+---
+# Variables applied to every host in the inventory.
+
+# Sudo/become password, read from the BECOME_PASSWORD env var (set it by
+# sourcing .env — see README). When the env var is unset/empty this evaluates
+# to `omit`, so the variable is not set at all and `-K` (prompt) still works.
+ansible_become_password: "{{ lookup('ansible.builtin.env', 'BECOME_PASSWORD') | default(omit, true) }}"
+
+# Put shared defaults here. Example:
+#
+# common_packages:
+#   - htop
+#   - git
+#   - curl

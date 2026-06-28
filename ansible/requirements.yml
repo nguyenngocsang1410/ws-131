@@ -1,0 +1,12 @@
+---
+# Galaxy dependencies. Install with:
+#   ansible-galaxy install -r requirements.yml
+#
+# NOTE: the pipx-installed `ansible` package already bundles ~91 collections,
+# including the ones below — so installing these is only needed if you want
+# newer versions than the bundled ones, or are running bare ansible-core.
+collections:
+  - name: ansible.posix
+  - name: community.general
+
+roles: []

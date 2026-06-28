@@ -1,0 +1,45 @@
+---
+# roles/internet_lockdown — cut a single local user off from the public internet,
+# enforced by a dedicated nftables table keyed to that user's UID and reloaded by a
+# small systemd unit (so it survives reboots and does not touch any other firewall
+# rules, including ufw).
+
+# The user to lock down.
+internet_lockdown_user: vsi
+
+# Desired state of the lockdown for that user:
+#   present -> install + enable the block
+#   absent  -> stop + remove the block (flushes the table, deletes unit + ruleset)
+internet_lockdown_state: present
+
+# What to do with that user's internet-bound packets:
+#   drop   -> silently dropped (connections hang then time out)
+#   reject -> actively refused with an ICMP "admin prohibited" (faster, clearer errors)
+internet_lockdown_action: drop
+
+# Keep the LAN reachable. When true, only the *public* internet is blocked — loopback,
+# RFC1918 / link-local / multicast destinations still work, so local services, LAN hosts
+# and DNS via systemd-resolved keep functioning. Set false for total network isolation
+# (loopback only).
+internet_lockdown_allow_private: true
+
+# Destinations treated as "not the internet" when internet_lockdown_allow_private is true.
+internet_lockdown_local_v4:
+  - 127.0.0.0/8         # loopback
+  - 10.0.0.0/8          # RFC1918
+  - 172.16.0.0/12       # RFC1918
+  - 192.168.0.0/16      # RFC1918
+  - 169.254.0.0/16      # link-local
+  - 224.0.0.0/4         # multicast
+  - 255.255.255.255/32  # limited broadcast
+internet_lockdown_local_v6:
+  - ::1/128             # loopback
+  - fc00::/7            # unique local
+  - fe80::/10           # link-local
+  - ff00::/8            # multicast
+
+# Derived names/paths (rarely need overriding). Everything is namespaced by the user so
+# the role can lock down more than one account without collisions.
+internet_lockdown_table: "{{ internet_lockdown_user }}_lockdown"
+internet_lockdown_service: "{{ internet_lockdown_user }}-internet-lockdown"
+internet_lockdown_nft_file: "/etc/nftables/{{ internet_lockdown_user }}-internet-lockdown.nft"

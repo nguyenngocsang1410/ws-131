@@ -1,0 +1,25 @@
+# Ansible artifacts
+*.retry
+*.log
+.facts_cache/
+
+# Galaxy collections/roles installed locally (re-installable from requirements.yml).
+# Custom, in-repo roles must be un-ignored explicitly below.
+collections/
+roles/*/
+!roles/.gitkeep
+!roles/internet_lockdown/
+
+# Local secrets / environment — never commit (keep the .example template)
+.env
+.env.*
+!.env.example
+
+# Vault secrets — never commit
+.vault_pass
+vault_pass*.txt
+*.vault
+
+# Python
+__pycache__/
+*.pyc

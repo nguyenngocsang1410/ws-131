@@ -1,0 +1,15 @@
+---
+galaxy_info:
+  role_name: internet_lockdown
+  author: vsi-Precision-3680 ansible workspace
+  description: >-
+    Block public-internet access for a single local user via a dedicated nftables
+    table (UID owner match) loaded by a systemd unit. Reboot-persistent, reversible,
+    and isolated from other firewall rules.
+  license: MIT
+  min_ansible_version: "2.15"
+  platforms:
+    - name: Ubuntu
+      versions:
+        - noble
+dependencies: []
