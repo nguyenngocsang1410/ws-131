@@ -65,3 +65,11 @@ Never rewrite — only append. Consistent prefixes so this stays parseable:
 - contradictions: none. Checked repeated facts across pages — Solr 9.10.1, Tika :9998, vsi uid 1000, 87%-full disk all consistent. The 16.0/16.1/16.2 spread is not a conflict: 16.2 is the deployment train with documented laggard modules on 16.1.x/15.x.
 - index: `build_index.py --check` clean (no drift); body-only edit, no regeneration needed.
 - no stale claims, no thin stubs, no unanswered-gap markers flagged this pass.
+
+## [2026-06-28] ingest | claude-plugins-official marketplace (new domain)
+- Source: live inspection of the Claude Code plugin marketplace on this host (`~/.claude/plugins/known_marketplaces.json` + `~/.claude/plugins/marketplaces/claude-plugins-official/` README/manifest); no `raw/` file. Introduces a new **Claude Code tooling** domain, separate from CONTACT PLM / Ansible.
+- created entities: [[claude-code]], [[claude-plugins-official]]
+- created concepts: [[claude-code-plugin]], [[claude-code-plugin-marketplace]]
+- created sources: [[2026-06-28-claude-plugins-marketplace-map]]
+- headline: official Anthropic marketplace `anthropics/claude-plugins-official` (synced 2026-06-26); 240-entry catalog = 37 first-party (`/plugins`) + third-party (`/external_plugins`, 15 local); top categories development 103 / productivity 45 / database 33; a plugin bundles commands+subagents+skills+hooks+MCP behind `.claude-plugin/plugin.json`, skills namespaced `<plugin>:<skill>`; only 2 plugins enabled locally (incl. `claude-code-setup`). Includes a Mermaid map on [[claude-plugins-official]].
+- index: regenerated on the main branch post-merge (not in the worktree, per schema).
