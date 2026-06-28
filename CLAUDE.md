@@ -13,6 +13,29 @@ maintenance.
 
 ---
 
+## Wiki-first
+
+**For every question and every task, consult the wiki before any other source — your own
+memory included.** This is the operating default, not just the Query workflow.
+
+1. **Start at `wiki/index.md`.** It is the catalog and the entry point. Read it first,
+   every session, before you answer or act.
+2. **Follow its links.** Open the relevant `entities/`, `concepts/`, and `sources/` pages
+   and read them. Grep page bodies when the index doesn't pinpoint the page.
+3. **Answer from the wiki, with citations.** Synthesize from the compiled pages and cite
+   them. The wiki — not your training-data recall, not the raw documents — is the source
+   you answer from by default.
+4. **Fall back deliberately, then compile.** Only when the wiki genuinely lacks the answer
+   do you reach for `raw/` or general knowledge — and say so when you do. Then write what
+   you learned back into the wiki so the next query is answered from the wiki, not
+   re-derived.
+
+Skipping the wiki to answer from memory or straight from `raw/` defeats the whole pattern:
+the point is to do retrieval **once**, into the wiki, then respect the wiki as the compiled
+source of truth.
+
+---
+
 ## Three layers
 
 | Layer | Directory | Owner | Mutability |
@@ -155,6 +178,8 @@ Never rewrite history here — only append.
 
 ## Principles
 
+- **Wiki-first.** Consult the wiki — starting at `index.md` — before answering anything or
+  reaching for `raw/` or your own memory. See the [Wiki-first](#wiki-first) rule above.
 - **Compile, don't retrieve.** Do the synthesis work once, up front; queries hit the
   compiled wiki, not raw documents.
 - **Knowledge compounds.** Each ingest makes the next query smarter. Prefer updating
