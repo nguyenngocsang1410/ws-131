@@ -52,15 +52,26 @@ def parse_frontmatter(text: str) -> tuple[dict[str, str], str]:
     return meta, body
 
 
-def one_line_definition(body: str, limit: int = 160) -> str:
-    """First non-empty, non-heading line of the body — the page's one-liner."""
+def one_line_definition(body: str, limit: int = 180) -> str:
+    """The page's opening definition: the first paragraph, whitespace-collapsed.
+
+    Pages hard-wrap the definition sentence across physical lines, so accumulate the
+    whole first paragraph (consecutive non-empty, non-heading lines) rather than a single
+    line, then truncate to keep the index entry to one row.
+    """
+    para: list[str] = []
     for line in body.splitlines():
         s = line.strip()
-        if not s or s.startswith("#"):
-            continue
-        s = s.replace("|", r"\|")
-        return s if len(s) <= limit else s[: limit - 1].rstrip() + "…"
-    return ""
+        if not para:
+            if not s or s.startswith("#"):
+                continue          # skip blanks and the H1 before the definition
+            para.append(s)
+        elif s and not s.startswith("#"):
+            para.append(s)        # continuation of the same paragraph
+        else:
+            break                 # blank line or heading ends the paragraph
+    text = " ".join(para)
+    return text if len(text) <= limit else text[: limit - 1].rstrip() + "…"
 
 
 def collect(cat_dir: Path) -> list[dict[str, str]]:
