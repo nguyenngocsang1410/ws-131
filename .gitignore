@@ -1,0 +1,12 @@
+# Claude Code session/agent state — local only (contains worktrees/ = other sessions' checkouts)
+.claude/
+
+# Raw install guides contain a live plaintext DB password — keep on disk for analysis,
+# but DO NOT version-control the secret. (Other raw/ source is tracked.)
+raw/contact/install-docs/
+
+# OS / editor noise
+.DS_Store
+*.swp
+__pycache__/
+*.pyc
