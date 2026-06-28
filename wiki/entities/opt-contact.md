@@ -64,7 +64,7 @@ Identity / runtime:
 - [[contact-customization-cust-plm]] / [[contact-vietnamese-localization]] — the `cust.plm` Vietnamese localization
 - [[vsi-precision-3680]] — the host it runs on
 - [[contact-source-access-via-ansible]] — how this (vsi-owned) tree was read for analysis
-- **Human-readable doc set:** `docs/contact-plm/` (linear digest of these pages, with diagrams & an ops runbook)
+- [[contact-plm-docs]] — human-readable doc set at `docs/contact-plm/` (linear digest of these pages, with diagrams & an ops runbook)
 
 ## Open questions
 - Which services/modules are actually licensed & in active use vs installed-but-idle.

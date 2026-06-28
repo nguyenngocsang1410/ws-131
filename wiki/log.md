@@ -57,3 +57,11 @@ Never rewrite — only append. Consistent prefixes so this stays parseable:
 - updated: [[contact-plm-architecture]] (added ASCII topology diagram), [[opt-contact]] (link to ops + docs)
 - regenerated [[index]] via `scripts/build_index.py` (33 pages).
 - note: docs set is a derived digest, not a raw/ source; wiki remains source of truth. Secrets still excluded.
+
+## [2026-06-28] lint
+- scope: 33 pages (10 entities, 18 concepts, 5 sources).
+- fixed 1 orphan: [[contact-plm-docs]] had no inbound links — [[opt-contact]] mentioned the doc set only by path. Converted that mention to a `[[contact-plm-docs]]` wiki-link (matches what the docs-ingest log entry claimed).
+- links: 0 dangling, 0 broken `[[links]]`; all `sources:` frontmatter paths (`raw/contact/responsible_views.py`, `raw/contact/install-docs/`, `docs/contact-plm/`) resolve on disk.
+- contradictions: none. Checked repeated facts across pages — Solr 9.10.1, Tika :9998, vsi uid 1000, 87%-full disk all consistent. The 16.0/16.1/16.2 spread is not a conflict: 16.2 is the deployment train with documented laggard modules on 16.1.x/15.x.
+- index: `build_index.py --check` clean (no drift); body-only edit, no regeneration needed.
+- no stale claims, no thin stubs, no unanswered-gap markers flagged this pass.
