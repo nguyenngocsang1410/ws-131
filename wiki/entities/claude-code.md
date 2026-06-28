@@ -42,11 +42,33 @@ Locally, installed marketplaces are registered in
 `claude-code-setup`, whose `claude-code-setup:claude-automation-recommender` skill then
 appeared).
 
+## Backends — how it connects (and the free/local question)
+Claude Code is **free to install but not open-source**, and is a networked client: it
+always needs to reach a model backend. The backend is configurable (verified against
+official docs, 2026-06-28 — see [[2026-06-28-ai-coding-agents-survey]]):
+
+- **Default:** Anthropic API (`ANTHROPIC_API_KEY`), or a Claude subscription.
+- **First-party cloud providers** via flags: `CLAUDE_CODE_USE_BEDROCK=1` (Amazon Bedrock),
+  `CLAUDE_CODE_USE_VERTEX=1` (Google Vertex AI), `CLAUDE_CODE_USE_FOUNDRY=1` (Microsoft
+  Foundry), `CLAUDE_CODE_USE_ANTHROPIC_AWS=1`.
+- **Any custom / third-party endpoint** via `ANTHROPIC_BASE_URL` + `ANTHROPIC_AUTH_TOKEN`
+  (Bearer) or `ANTHROPIC_API_KEY` (x-api-key) — the endpoint **must speak the Anthropic
+  Messages API format**. This is how LLM gateways (LiteLLM, OpenRouter, claude-code-router)
+  work; supported but not endorsed by Anthropic.
+- **Local model:** point `ANTHROPIC_BASE_URL` at a **local Anthropic-format proxy** wrapping
+  Ollama/vLLM. Works, but it is the *harder* free+local path vs. the natively-local
+  open-source agents — see [[local-model-coding-agent]] and the comparison in
+  [[ai-coding-agents]]. Not designed for fully-offline use (version/WebFetch/telemetry
+  egress, each disableable: `CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC=1`, `DISABLE_TELEMETRY=1`).
+
 ## Related
+- [[ai-coding-agents]] — the cross-vendor landscape of agents this one belongs to
+- [[local-model-coding-agent]] — running Claude Code (or an alternative) on a local model
 - [[claude-code-plugin]] — the package format that extends this tool
 - [[claude-code-plugin-marketplace]] — how plugins are distributed and installed
 - [[claude-plugins-official]] — the one marketplace registered on this machine
 - [[2026-06-28-claude-plugins-marketplace-map]] — the session that compiled this domain
+- [[2026-06-28-ai-coding-agents-survey]] — the session that added the backend facts above
 
 ## Open questions
 - Exact version of Claude Code running on this host (not recorded this session).
