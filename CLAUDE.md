@@ -124,7 +124,8 @@ Trigger: the human adds a file to `raw/` (or says "ingest X").
 4. **Create or revise entity/concept pages** the source touches. A single source typically
    touches **10–15 wiki pages** — create stubs for new entities/concepts, update existing
    ones, add cross-links both directions.
-5. **Update `wiki/index.md`** with any new pages.
+5. **Regenerate `wiki/index.md`**: run `python3 scripts/build_index.py`. Never hand-edit
+   the index — it is derived from page frontmatter.
 6. **Append to `wiki/log.md`**: `## [YYYY-MM-DD] ingest | <source title>` + a line on what changed.
 
 ### 2. Query — answer a question
@@ -146,7 +147,8 @@ Scan for and report (and fix where unambiguous):
 - **Broken / dangling links** — `[[links]]` to non-existent pages (decide: create or remove).
 - **Missing cross-references** — related pages that should link but don't.
 - **Data gaps** — questions raised but never answered; thin stubs.
-- **Index drift** — pages missing from `index.md`, or index entries with no page.
+- **Index drift** — run `python3 scripts/build_index.py --check`; if it reports stale,
+  regenerate with `python3 scripts/build_index.py`.
 
 Append results: `## [YYYY-MM-DD] lint` + findings in `wiki/log.md`.
 
@@ -156,8 +158,22 @@ Append results: `## [YYYY-MM-DD] lint` + findings in `wiki/log.md`.
 
 ### `wiki/index.md`
 A content-oriented catalog of every page, grouped by category. Each entry: link, one-line
-summary, and key metadata (e.g. updated date, status). **Update on every ingest.** This is
-the entry point for Query — read it first.
+summary, and key metadata (updated date, status). This is the entry point for Query —
+read it first.
+
+**`index.md` is a GENERATED artifact — never hand-edit it.** It is compiled from page
+frontmatter (`title`, `updated`, `status`) and each page's one-line definition by
+`scripts/build_index.py`. After creating, editing, renaming, or deleting pages, rebuild it:
+
+```
+python3 scripts/build_index.py            # rewrite wiki/index.md (prints a generation timestamp)
+python3 scripts/build_index.py --check     # report drift only; exit 1 if stale (for lint/CI)
+```
+
+Generating the index instead of hand-merging it is what makes parallel worktree sessions
+safe: branches only ever edit individual page files (separate files never collide) and
+append to the log (which merges via `union` — see `.gitattributes`); the index is rebuilt
+**once on the target branch after merge**. Do not run the generator inside a worktree.
 
 ### `wiki/log.md`
 Append-only, chronological, machine-parseable. One entry per operation, newest at the
@@ -172,7 +188,9 @@ bottom, consistent prefix:
 - fixed 2 dangling links; flagged 1 contradiction in [[page-d]]
 ```
 
-Never rewrite history here — only append.
+Never rewrite history here — only append. `wiki/log.md` is configured for `union` merge
+(see `.gitattributes`), so entries appended on parallel worktree branches all survive a
+merge instead of conflicting — provided you keep it strictly append-only.
 
 ---
 
